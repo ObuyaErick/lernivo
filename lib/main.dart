@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lernivo/screens/sign_in_screen.dart';
+
 void main() {
-  runApp(const LernivoApp());
+  runApp(const ProviderScope(child: LernivoApp()));
 }
 
 class LernivoApp extends StatelessWidget {
@@ -14,11 +17,7 @@ class LernivoApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
       ),
-      home: Scaffold(),
+      home: SignInScreen(),
     );
   }
-}
-
-class CreateNewItemIntent extends Intent {
-  const CreateNewItemIntent();
 }
