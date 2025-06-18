@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lernivo/auth/auth_context_provider.dart';
 import 'package:lernivo/screens/error_screen.dart';
 import 'package:lernivo/screens/home_screen.dart';
+import 'package:lernivo/screens/sign_in_screen.dart';
 import 'package:lernivo/screens/splash_screen.dart';
 
 void main() {
@@ -21,11 +22,21 @@ class LernivoApp extends ConsumerWidget {
       title: 'Lernivo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlueAccent),
       ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.lightBlueAccent,
+          brightness: Brightness.dark,
+        ),
+      ),
+      themeMode: ThemeMode.system,
       home: authContextAsync.when(
         data: (authContext) {
-          return const HomeScreen();
+          if (authContext != null) {
+            return HomeScreen();
+          }
+          return SignInScreen();
         },
         error: (error, stack) => const ErrorScreen(),
         loading: () => const SplashScreen(),

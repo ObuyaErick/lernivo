@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AppTextFieldMaterial extends StatelessWidget {
-  const AppTextFieldMaterial({super.key, this.child});
+  const AppTextFieldMaterial({super.key, this.borderRadius, this.child});
 
   final Widget? child;
+  final double? borderRadius;
 
   @override
   Widget build(BuildContext context) {
     return Material(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(borderRadius ?? 8.0),
         side: BorderSide(
           color: Theme.of(
             context,

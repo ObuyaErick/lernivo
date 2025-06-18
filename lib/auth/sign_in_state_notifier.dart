@@ -7,6 +7,7 @@ import 'package:lernivo/auth/sign_in_dto/sign_in_dto.dart';
 import 'package:lernivo/auth/sign_in_dto/sign_in_state.dart';
 
 class SignInStateNotifier extends Notifier<SignInState?> {
+  SignInStateNotifier();
   @override
   build() => null;
 
@@ -23,6 +24,8 @@ class SignInStateNotifier extends Notifier<SignInState?> {
       final signInResponse = SignInState.fromJson(json.decode(response.body));
 
       state = signInResponse;
+    } else {
+      throw Exception(response.body);
     }
   }
 

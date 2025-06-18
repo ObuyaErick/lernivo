@@ -19,7 +19,9 @@ class AuthContextNotifier extends AsyncNotifier<AuthContext?> {
     try {
       final response = await http.get(
         Uri.parse("http://192.168.8.6:3000/session/current-user"),
-        headers: {HttpHeaders.authorizationHeader: "Bearer "},
+        headers: {
+          HttpHeaders.authorizationHeader: "Bearer ${signInState.accessToken}",
+        },
       );
       if (response.statusCode == 200) {
         return AuthContext.fromJson(json.decode(response.body));
