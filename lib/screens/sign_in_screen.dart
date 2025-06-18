@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:lernivo/auth/auth_context_provider.dart';
 import 'package:lernivo/auth/sign_in_dto/sign_in_dto.dart';
 import 'package:lernivo/auth/sign_in_state_provider.dart';
 
@@ -12,37 +11,63 @@ class SignInScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final signInBy = useState(SignInBy.password);
-    final signInState = ref.watch(signInStateProvider);
-
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             floating: true,
+            pinned: true,
             expandedHeight: 250.0,
-            title: Text(
-              'Lernivo',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.w900),
-              textAlign: TextAlign.center,
-            ),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            elevation: 4,
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).colorScheme.primary,
-                      Theme.of(context).colorScheme.primary.withAlpha(255),
-                    ],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                  ),
+              titlePadding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 16.0,
+              ),
+              centerTitle: true,
+              title: Text(
+                'Lernivo',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
+                  fontSize: 24.0,
                 ),
+              ),
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(context).colorScheme.primary,
+                          Theme.of(context).colorScheme.primaryContainer,
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 32.0),
+                      child: Icon(
+                        Icons.school_rounded,
+                        size: 64,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onPrimary.withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(
@@ -75,8 +100,6 @@ class SignInForm extends HookConsumerWidget {
     final passwordVisible = useState(false);
     final signingIn = useState(false);
 
-    final signInState = ref.watch(signInStateProvider);
-
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     return Form(
@@ -88,7 +111,7 @@ class SignInForm extends HookConsumerWidget {
           Padding(
             padding: EdgeInsets.only(left: 32.0, bottom: 2.0, top: 4.0),
             child: Text(
-              "Welcome Back! ${signInState?.accessToken.substring(0, 4)}",
+              "Welcome Back!",
               style: Theme.of(
                 context,
               ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),

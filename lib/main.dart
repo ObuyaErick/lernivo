@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lernivo/auth/auth_context_provider.dart';
 import 'package:lernivo/screens/error_screen.dart';
-import 'package:lernivo/screens/home_screen.dart';
 import 'package:lernivo/screens/sign_in_screen.dart';
 import 'package:lernivo/screens/splash_screen.dart';
+import 'package:lernivo/screens/students/student_profile_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: LernivoApp()));
@@ -34,7 +34,7 @@ class LernivoApp extends ConsumerWidget {
       home: authContextAsync.when(
         data: (authContext) {
           if (authContext != null) {
-            return HomeScreen();
+            return StudentProfileScreen();
           }
           return SignInScreen();
         },
