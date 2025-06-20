@@ -5,6 +5,7 @@ import 'package:lernivo/auth/auth_support/password_reset_request_dto.dart';
 import 'package:lernivo/auth/sign_in_state_provider.dart';
 import 'package:lernivo/auth/tenant/tenant_details.dart';
 import 'package:lernivo/auth/tenant_list_provider.dart';
+import 'package:lernivo/screens/password_reset_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 class RequestPasswordResetScreen extends HookConsumerWidget {
@@ -160,11 +161,34 @@ class RequestPasswordResetScreen extends HookConsumerWidget {
               //     color: Theme.of(context).colorScheme.onSurfaceVariant,
               //   ),
               // ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 16),
 
               SizedBox(
                 width: double.infinity,
-                child: TextButton(
+                child: FilledButton.tonal(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PasswordResetScreen(),
+                      ),
+                    );
+                  },
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  ),
+                  child: const Text(
+                    'I have reset code',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.tonal(
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -367,10 +391,9 @@ class TenantSelectorSheet extends HookConsumerWidget {
                           baseColor: Theme.of(
                             context,
                           ).colorScheme.onSurface.withValues(alpha: 0.1),
-                          highlightColor: Theme.of(context)
-                              .colorScheme
-                              .onSurfaceVariant
-                              .withValues(alpha: 0.4),
+                          highlightColor: Theme.of(
+                            context,
+                          ).colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                           child: Container(
                             height: 64,
                             decoration: BoxDecoration(
