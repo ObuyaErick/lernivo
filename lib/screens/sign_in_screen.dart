@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lernivo/auth/sign_in_dto/sign_in_dto.dart';
 import 'package:lernivo/auth/sign_in_state_provider.dart';
+import 'package:lernivo/screens/request_password_reset_screen.dart';
 
 enum SignInBy { password, pin, fingerprint }
 
@@ -14,59 +15,7 @@ class SignInScreen extends HookConsumerWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            floating: true,
-            pinned: true,
-            expandedHeight: 250.0,
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            elevation: 4,
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 16.0,
-              ),
-              centerTitle: true,
-              title: Text(
-                'Lernivo',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
-                  fontSize: 24.0,
-                ),
-              ),
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Theme.of(context).colorScheme.primary,
-                          Theme.of(context).colorScheme.primaryContainer,
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 32.0),
-                      child: Icon(
-                        Icons.school_rounded,
-                        size: 64,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onPrimary.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          _buildSliverAppBar(context),
 
           SliverToBoxAdapter(
             child: Padding(
@@ -78,6 +27,62 @@ class SignInScreen extends HookConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  SliverAppBar _buildSliverAppBar(BuildContext context) {
+    return SliverAppBar(
+      floating: true,
+      pinned: true,
+      expandedHeight: 250.0,
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      elevation: 4,
+      flexibleSpace: FlexibleSpaceBar(
+        titlePadding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 16.0,
+        ),
+        centerTitle: true,
+        title: Text(
+          'Lernivo',
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            color: Theme.of(context).colorScheme.onPrimary,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+            fontSize: 24.0,
+          ),
+        ),
+        background: Stack(
+          fit: StackFit.expand,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Theme.of(context).colorScheme.primary,
+                    Theme.of(context).colorScheme.primaryContainer,
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 32.0),
+                child: Icon(
+                  Icons.school_rounded,
+                  size: 64,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onPrimary.withValues(alpha: 0.6),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -131,11 +136,12 @@ class SignInForm extends HookConsumerWidget {
           TextFormField(
             controller: tenantController,
             decoration: InputDecoration(
+              filled: true,
               isDense: true,
               hintText: 'e.g. yourschoolname',
               prefixIcon: Icon(Icons.school_outlined),
               border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white60),
+                borderSide: BorderSide.none,
                 borderRadius: BorderRadius.all(Radius.circular(40.0)),
               ),
             ),
@@ -159,11 +165,12 @@ class SignInForm extends HookConsumerWidget {
           TextFormField(
             controller: usernameController,
             decoration: const InputDecoration(
+              filled: true,
               isDense: true,
               hintText: 'enter your username',
               prefixIcon: Icon(Icons.person_outline),
               border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white60),
+                borderSide: BorderSide.none,
                 borderRadius: BorderRadius.all(Radius.circular(40.0)),
               ),
             ),
@@ -188,6 +195,7 @@ class SignInForm extends HookConsumerWidget {
             controller: passwordController,
             obscureText: !passwordVisible.value,
             decoration: InputDecoration(
+              filled: true,
               isDense: true,
               hintText: 'enter your password',
               prefixIcon: Icon(Icons.lock_open_outlined),
@@ -201,7 +209,7 @@ class SignInForm extends HookConsumerWidget {
                         : const Icon(Icons.visibility_off_outlined),
               ),
               border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white60),
+                borderSide: BorderSide.none,
                 borderRadius: BorderRadius.all(Radius.circular(40.0)),
               ),
             ),
@@ -298,6 +306,12 @@ class SignInForm extends HookConsumerWidget {
           FilledButton.tonal(
             onPressed: () {
               // Handle forgot password navigation
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RequestPasswordResetScreen(),
+                ),
+              );
             },
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
