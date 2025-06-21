@@ -242,35 +242,36 @@ class SignInForm extends HookConsumerWidget {
                                 password: passwordController.text,
                               ),
                             )
-                            .then((_) {
+                            .then((response) {
                               if (context.mounted) {
+                                String? message;
+                                bool error;
+                                if (response.hasData) {
+                                  message = response.body!.message;
+                                  error = false;
+                                } else if (response.hasErrors) {
+                                  message = response.errors?.message[0];
+                                  error = true;
+                                } else {
+                                  message = "An unexpected error occured";
+                                  error = true;
+                                }
+
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     backgroundColor:
-                                        Theme.of(context).colorScheme.primary,
+                                        error
+                                            ? Theme.of(
+                                              context,
+                                            ).colorScheme.error
+                                            : Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
                                     behavior: SnackBarBehavior.floating,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10.0),
                                     ),
-                                    content: Text("Login Successful"),
-                                    duration: Duration(seconds: 10),
-                                  ),
-                                );
-                              }
-                            })
-                            .catchError((error, stack) {
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.error,
-                                    behavior: SnackBarBehavior.floating,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    content: Text(
-                                      "Login Failed. Error: $error",
-                                    ),
+                                    content: Text("$message"),
                                     duration: Duration(seconds: 10),
                                   ),
                                 );

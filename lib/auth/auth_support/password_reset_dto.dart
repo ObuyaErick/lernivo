@@ -7,8 +7,9 @@ part 'password_reset_dto.g.dart';
 sealed class PasswordResetDto with _$PasswordResetDto {
   factory PasswordResetDto({
     required String tenant,
-    required String username,
-    required String password,
+    required String newPassword,
+    required String confirmNewPassword,
+    required String otp,
   }) = _PasswordResetDto;
 
   factory PasswordResetDto.fromJson(Map<String, dynamic> json) =>

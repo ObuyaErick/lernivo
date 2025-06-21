@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lernivo/auth/auth_context_provider.dart';
+import 'package:lernivo/auth/auth_state_provider.dart';
 import 'package:lernivo/screens/error_screen.dart';
+import 'package:lernivo/screens/main_flow.dart';
 import 'package:lernivo/screens/sign_in_screen.dart';
 import 'package:lernivo/screens/splash_screen.dart';
 import 'package:lernivo/screens/students/student_profile_screen.dart';
@@ -16,7 +17,7 @@ class LernivoApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authContextAsync = ref.watch(authContextProvider);
+    final authStateAsync = ref.watch(authStateProvider);
 
     return MaterialApp(
       title: 'Lernivo',
@@ -31,10 +32,10 @@ class LernivoApp extends ConsumerWidget {
         ),
       ),
       themeMode: ThemeMode.system,
-      home: authContextAsync.when(
-        data: (authContext) {
-          if (authContext != null) {
-            return StudentProfileScreen();
+      home: authStateAsync.when(
+        data: (authState) {
+          if (authState.hasData) {
+            return AuthorizedAppFlow();
           }
           return SignInScreen();
         },

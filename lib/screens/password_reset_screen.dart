@@ -2,13 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lernivo/auth/auth_support/password_reset_dto.dart';
+import 'package:lernivo/auth/sign_in_state_provider.dart';
 
 class PasswordResetScreen extends HookConsumerWidget {
   const PasswordResetScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final newPasswordController = useTextEditingController();
+    final confirmPasswordController = useTextEditingController();
     final passwordVisible = useState(false);
+    final isSubmitting = useState(false);
+    final otp = useState('');
+    useListenable(newPasswordController);
+    useListenable(confirmPasswordController);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Reset Password')),
@@ -29,6 +37,7 @@ class PasswordResetScreen extends HookConsumerWidget {
 
               TextFormField(
                 obscureText: !passwordVisible.value,
+                controller: newPasswordController,
                 decoration: InputDecoration(
                   filled: true,
                   prefixIcon: Icon(Icons.lock_open_outlined),
@@ -58,6 +67,7 @@ class PasswordResetScreen extends HookConsumerWidget {
 
               TextFormField(
                 obscureText: !passwordVisible.value,
+                controller: confirmPasswordController,
                 decoration: InputDecoration(
                   filled: true,
                   prefixIcon: Icon(Icons.lock_open_outlined),
@@ -87,9 +97,7 @@ class PasswordResetScreen extends HookConsumerWidget {
 
               OtpTextField(
                 numberOfFields: 6,
-                borderColor: Theme.of(
-                  context,
-                ).colorScheme.onSurface.withValues(alpha: 0.7),
+                focusedBorderColor: Theme.of(context).colorScheme.primary,
                 showFieldAsBox: true,
               ),
 
@@ -98,7 +106,76 @@ class PasswordResetScreen extends HookConsumerWidget {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: () {},
+                  onPressed:
+                      isSubmitting.value ||
+                              newPasswordController.text.isEmpty ||
+                              confirmPasswordController.text.isEmpty
+                          ? null
+                          : () {
+                            isSubmitting.value = true;
+                            ref
+                                .read(signInStateProvider.notifier)
+                                .resetPassword(
+                                  PasswordResetDto(
+                                    tenant: "victoria",
+                                    newPassword: newPasswordController.text,
+                                    confirmNewPassword:
+                                        confirmPasswordController.text,
+                                    otp: otp.value,
+                                  ),
+                                )
+                                .then((response) {
+                                  if (context.mounted) {
+                                    String? message;
+                                    bool error;
+                                    if (response.hasData) {
+                                      message = response.body!.message;
+                                      error = false;
+                                    } else if (response.hasErrors) {
+                                      message = response.errors?.message.join(
+                                        ", ",
+                                      );
+                                      error = true;
+                                    } else {
+                                      message = "An unexpected error occured";
+                                      error = true;
+                                    }
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        backgroundColor:
+                                            error
+                                                ? Theme.of(
+                                                  context,
+                                                ).colorScheme.error
+                                                : Theme.of(
+                                                  context,
+                                                ).colorScheme.primary,
+                                        behavior: SnackBarBehavior.floating,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10.0,
+                                          ),
+                                        ),
+                                        content: Text("$message"),
+                                        duration: Duration(seconds: 10),
+                                      ),
+                                    );
+
+                                    if (!error) {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder:
+                                      //         (context) =>
+                                      //             PasswordResetScreen(),
+                                      //   ),
+                                      // );
+                                    }
+                                  }
+                                });
+                            isSubmitting.value = false;
+                          },
                   style: ElevatedButton.styleFrom(
                     elevation: 2.0,
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -106,7 +183,39 @@ class PasswordResetScreen extends HookConsumerWidget {
                       borderRadius: BorderRadius.circular(40.0),
                     ),
                   ),
-                  child: const Text('Confirm', style: TextStyle(fontSize: 16)),
+                  child:
+                      isSubmitting.value
+                          ? CircularProgressIndicator(
+                            constraints: BoxConstraints.tightFor(
+                              width: 24.0,
+                              height: 24.0,
+                            ),
+                            valueColor: AlwaysStoppedAnimation(
+                              Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          )
+                          : const Text(
+                            "Confirm",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.tonal(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  ),
+                  child: const Text(
+                    'Back to Login',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
               ),
             ],

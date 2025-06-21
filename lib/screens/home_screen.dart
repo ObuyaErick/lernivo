@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:lernivo/auth/auth_context_provider.dart';
+import 'package:lernivo/auth/auth_state_provider.dart';
 import 'package:lernivo/auth/sign_in_state_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -8,12 +8,12 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authContextAsync = ref.watch(authContextProvider);
+    final authStateAsync = ref.watch(authStateProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text("Home Screen")),
       body: Center(
-        child: switch (authContextAsync) {
+        child: switch (authStateAsync) {
           AsyncData(:final value) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lernivo/auth/sign_in_state_provider.dart';
 
 class StudentProfileScreen extends ConsumerWidget {
   const StudentProfileScreen({super.key});
@@ -14,17 +15,25 @@ class StudentProfileScreen extends ConsumerWidget {
           SliverAppBar(
             pinned: true,
             expandedHeight: 200,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  ref.read(signInStateProvider.notifier).logout();
+                },
+                icon: Icon(Icons.logout_outlined),
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      theme.colorScheme.primary,
-                      theme.colorScheme.primaryContainer,
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
+                  // gradient: LinearGradient(
+                  //   colors: [
+                  //     theme.colorScheme.primary,
+                  //     theme.colorScheme.primaryContainer,
+                  //   ],
+                  //   begin: Alignment.topCenter,
+                  //   end: Alignment.bottomCenter,
+                  // ),
                 ),
                 child: Align(
                   alignment: Alignment.bottomCenter,

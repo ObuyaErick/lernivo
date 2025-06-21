@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SignInState {
 
- String get message; String get accessToken;
+ String get accessToken;
 /// Create a copy of SignInState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $SignInStateCopyWith<SignInState> get copyWith => _$SignInStateCopyWithImpl<Sign
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SignInState&&(identical(other.message, message) || other.message == message)&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SignInState&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,message,accessToken);
+int get hashCode => Object.hash(runtimeType,accessToken);
 
 @override
 String toString() {
-  return 'SignInState(message: $message, accessToken: $accessToken)';
+  return 'SignInState(accessToken: $accessToken)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $SignInStateCopyWith<$Res>  {
   factory $SignInStateCopyWith(SignInState value, $Res Function(SignInState) _then) = _$SignInStateCopyWithImpl;
 @useResult
 $Res call({
- String message, String accessToken
+ String accessToken
 });
 
 
@@ -66,10 +66,9 @@ class _$SignInStateCopyWithImpl<$Res>
 
 /// Create a copy of SignInState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? message = null,Object? accessToken = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? accessToken = null,}) {
   return _then(_self.copyWith(
-message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
+accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -81,10 +80,9 @@ as String,
 @JsonSerializable()
 
 class _SignInState implements SignInState {
-   _SignInState({required this.message, required this.accessToken});
+   _SignInState({required this.accessToken});
   factory _SignInState.fromJson(Map<String, dynamic> json) => _$SignInStateFromJson(json);
 
-@override final  String message;
 @override final  String accessToken;
 
 /// Create a copy of SignInState
@@ -100,16 +98,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SignInState&&(identical(other.message, message) || other.message == message)&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SignInState&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,message,accessToken);
+int get hashCode => Object.hash(runtimeType,accessToken);
 
 @override
 String toString() {
-  return 'SignInState(message: $message, accessToken: $accessToken)';
+  return 'SignInState(accessToken: $accessToken)';
 }
 
 
@@ -120,7 +118,7 @@ abstract mixin class _$SignInStateCopyWith<$Res> implements $SignInStateCopyWith
   factory _$SignInStateCopyWith(_SignInState value, $Res Function(_SignInState) _then) = __$SignInStateCopyWithImpl;
 @override @useResult
 $Res call({
- String message, String accessToken
+ String accessToken
 });
 
 
@@ -137,10 +135,9 @@ class __$SignInStateCopyWithImpl<$Res>
 
 /// Create a copy of SignInState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? message = null,Object? accessToken = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? accessToken = null,}) {
   return _then(_SignInState(
-message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
+accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

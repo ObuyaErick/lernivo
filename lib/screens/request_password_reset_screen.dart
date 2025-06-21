@@ -17,6 +17,8 @@ class RequestPasswordResetScreen extends HookConsumerWidget {
     final emailOrUsernameController = useTextEditingController();
     final tenantFieldFocusNode = useFocusNode();
     final isRequesting = useState(false);
+    useListenable(tenantController);
+    useListenable(emailOrUsernameController);
 
     useEffect(() {
       void onFocusChange() async {
@@ -116,26 +118,52 @@ class RequestPasswordResetScreen extends HookConsumerWidget {
                                     username: emailOrUsernameController.text,
                                   ),
                                 )
-                                .then((res) {
+                                .then((response) {
                                   if (context.mounted) {
+                                    String? message;
+                                    bool error;
+                                    if (response.hasData) {
+                                      message = response.body!.message;
+                                      error = false;
+                                    } else if (response.hasErrors) {
+                                      message = response.errors?.message[0];
+                                      error = true;
+                                    } else {
+                                      message = "An unexpected error occured";
+                                      error = true;
+                                    }
+
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         backgroundColor:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.primary,
-                                        content: Text(
-                                          "We have sent an OTP to your email",
+                                            error
+                                                ? Theme.of(
+                                                  context,
+                                                ).colorScheme.error
+                                                : Theme.of(
+                                                  context,
+                                                ).colorScheme.primary,
+                                        behavior: SnackBarBehavior.floating,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10.0,
+                                          ),
                                         ),
+                                        content: Text("$message"),
+                                        duration: Duration(seconds: 10),
                                       ),
                                     );
-                                  }
-                                })
-                                .catchError((e) {
-                                  if (context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text("$e")),
-                                    );
+
+                                    if (!error) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) =>
+                                                  PasswordResetScreen(),
+                                        ),
+                                      );
+                                    }
                                   }
                                 });
                             isRequesting.value = false;
@@ -147,10 +175,21 @@ class RequestPasswordResetScreen extends HookConsumerWidget {
                       borderRadius: BorderRadius.circular(40.0),
                     ),
                   ),
-                  child: const Text(
-                    'Send One-Time Password',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                  child:
+                      isRequesting.value
+                          ? CircularProgressIndicator(
+                            constraints: BoxConstraints.tightFor(
+                              width: 24.0,
+                              height: 24.0,
+                            ),
+                            valueColor: AlwaysStoppedAnimation(
+                              Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          )
+                          : const Text(
+                            'Send One-Time Password',
+                            style: TextStyle(fontSize: 16),
+                          ),
                 ),
               ),
 
@@ -363,15 +402,7 @@ class TenantSelectorSheet extends HookConsumerWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).primaryColor.withValues(alpha: 0.1),
-                                child: Icon(
-                                  Icons.school,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                              ),
+                              leading: CircleAvatar(child: Icon(Icons.school)),
                               title: Text(tenant.name),
                               subtitle: Text(tenant.username),
                               onTap: () => onTenantSelected(tenant),
