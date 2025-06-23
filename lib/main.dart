@@ -6,7 +6,6 @@ import 'package:lernivo/screens/error_screen.dart';
 import 'package:lernivo/screens/main_flow.dart';
 import 'package:lernivo/screens/sign_in_screen.dart';
 import 'package:lernivo/screens/splash_screen.dart';
-import 'package:lernivo/screens/students/student_profile_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: LernivoApp()));

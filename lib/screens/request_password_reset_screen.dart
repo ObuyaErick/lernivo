@@ -19,6 +19,7 @@ class RequestPasswordResetScreen extends HookConsumerWidget {
     final isRequesting = useState(false);
     useListenable(tenantController);
     useListenable(emailOrUsernameController);
+    final selectedTenantDetails = ref.watch(selectedTenantProvider);
 
     useEffect(() {
       void onFocusChange() async {
@@ -29,7 +30,7 @@ class RequestPasswordResetScreen extends HookConsumerWidget {
           final tenantDetails = await _showTenantSelector(context, ref);
           if (tenantDetails != null) {
             tenantController.text = tenantDetails.username;
-            ref.read(_selectedTenantProvider.notifier).state = tenantDetails;
+            ref.read(selectedTenantProvider.notifier).state = tenantDetails;
           }
         }
       }
@@ -205,13 +206,26 @@ class RequestPasswordResetScreen extends HookConsumerWidget {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton.tonal(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PasswordResetScreen(),
-                      ),
-                    );
+                  onPressed: () async {
+                    TenantDetails? tenantDetails;
+
+                    if (selectedTenantDetails == null) {
+                      tenantDetails = await _showTenantSelector(context, ref);
+                      if (tenantDetails != null) {
+                        tenantController.text = tenantDetails.username;
+                        ref.read(selectedTenantProvider.notifier).state =
+                            tenantDetails;
+                      }
+                    }
+
+                    if (context.mounted && tenantDetails != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PasswordResetScreen(),
+                        ),
+                      );
+                    }
                   },
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -267,7 +281,7 @@ class RequestPasswordResetScreen extends HookConsumerWidget {
   }
 }
 
-final _selectedTenantProvider = StateProvider<TenantDetails?>((ref) => null);
+final selectedTenantProvider = StateProvider<TenantDetails?>((ref) => null);
 
 class TenantSelectorSheet extends HookConsumerWidget {
   final Function(TenantDetails) onTenantSelected;
@@ -279,7 +293,7 @@ class TenantSelectorSheet extends HookConsumerWidget {
     final tenantSearchController = useTextEditingController();
     final searchTerm = useState('');
     final filteredSchools = ref.watch(tenantListProvider(searchTerm.value));
-    final selectedTenant = ref.watch(_selectedTenantProvider);
+    final selectedTenant = ref.watch(selectedTenantProvider);
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.8,

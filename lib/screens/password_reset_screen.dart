@@ -4,6 +4,7 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lernivo/auth/auth_support/password_reset_dto.dart';
 import 'package:lernivo/auth/sign_in_state_provider.dart';
+import 'package:lernivo/screens/request_password_reset_screen.dart';
 
 class PasswordResetScreen extends HookConsumerWidget {
   const PasswordResetScreen({super.key});
@@ -18,6 +19,8 @@ class PasswordResetScreen extends HookConsumerWidget {
     useListenable(newPasswordController);
     useListenable(confirmPasswordController);
 
+    final tenantDetails = ref.watch(selectedTenantProvider);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Reset Password')),
       body: SingleChildScrollView(
@@ -27,6 +30,37 @@ class PasswordResetScreen extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (tenantDetails != null)
+                Material(
+                  elevation: 1.0,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(child: Icon(Icons.school)),
+                    title: Text(tenantDetails.name),
+                    subtitle: Text(tenantDetails.username),
+                    onTap: () => {},
+                  ),
+                ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: FilledButton(
+                  onPressed: () {},
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.change_circle_outlined),
+                      SizedBox(width: 8.0),
+                      const Text("Change"),
+                    ],
+                  ),
+                ),
+              ),
+
               Padding(
                 padding: EdgeInsets.only(left: 24.0, bottom: 2.0),
                 child: Text(
